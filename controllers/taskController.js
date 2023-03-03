@@ -1,0 +1,34 @@
+const Task = require("../models/Task");
+
+const taskController = {};
+
+
+taskController.createTask = async(req, res) => {
+    try {
+        const {title, description, user_id} = req.body;
+
+        const newTask = await Task.create(
+            {
+                title: title,
+                description: description,
+                user_id: user_id
+            }
+        )
+
+        return res.json({
+            success: true,
+            message: "Task created",
+            data: newTask
+        })        
+    } catch (error) {
+        return res.status(500).json(
+            {
+                success: false,
+                message: "something went wrong",
+                error: error.message
+            }
+        )
+    }
+}
+
+module.exports = taskController;
