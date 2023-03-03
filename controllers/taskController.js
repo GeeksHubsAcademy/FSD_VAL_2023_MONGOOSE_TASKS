@@ -31,4 +31,26 @@ taskController.createTask = async(req, res) => {
     }
 }
 
+taskController.getAll = async(req, res) => {
+    try {
+        const tasks = await Task.find().populate("user_id", {password: 0, role_id: 0});
+
+        return res.json(
+            {
+                success: true,
+                message: "Get All Tasks retrieved",
+                data: tasks
+            }
+        )        
+    } catch (error) {
+        return res.status(500).json(
+            {
+                success: false,
+                message: "something went wrong",
+                error: error.message
+            }
+        ) 
+    }
+}
+
 module.exports = taskController;
