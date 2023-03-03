@@ -5,13 +5,14 @@ const taskController = {};
 
 taskController.createTask = async(req, res) => {
     try {
-        const {title, description, user_id} = req.body;
+        const {title, description} = req.body;
+        const userId = req.userId
 
         const newTask = await Task.create(
             {
                 title: title,
                 description: description,
-                user_id: user_id
+                user_id: userId
             }
         )
 
