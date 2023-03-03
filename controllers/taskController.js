@@ -3,9 +3,9 @@ const Task = require("../models/Task");
 const taskController = {};
 
 
-taskController.createTask = async(req, res) => {
+taskController.createTask = async (req, res) => {
     try {
-        const {title, description} = req.body;
+        const { title, description } = req.body;
         const userId = req.userId
 
         const newTask = await Task.create(
@@ -20,7 +20,7 @@ taskController.createTask = async(req, res) => {
             success: true,
             message: "Task created",
             data: newTask
-        })        
+        })
     } catch (error) {
         return res.status(500).json(
             {
@@ -32,9 +32,9 @@ taskController.createTask = async(req, res) => {
     }
 }
 
-taskController.getAll = async(req, res) => {
+taskController.getAll = async (req, res) => {
     try {
-        const tasks = await Task.find().populate("user_id", {password: 0, role_id: 0});
+        const tasks = await Task.find().populate("user_id", { password: 0, role_id: 0 });
 
         return res.json(
             {
@@ -42,7 +42,7 @@ taskController.getAll = async(req, res) => {
                 message: "Get All Tasks retrieved",
                 data: tasks
             }
-        )        
+        )
     } catch (error) {
         return res.status(500).json(
             {
@@ -50,7 +50,46 @@ taskController.getAll = async(req, res) => {
                 message: "something went wrong",
                 error: error.message
             }
-        ) 
+        )
+    }
+}
+
+taskController.getTaskById = async (req, res) => {
+    try {
+        const taskId = req.params.id;
+        const userId = req.userId;
+
+        const task = await Task.findOne(
+            {
+                _id: taskId,
+                user_id: userId
+            }
+        )
+
+        if (!task) {
+            return res.json(
+                {
+                    success: true,
+                    message: "task doesn exists",
+                }
+            )
+        }
+
+        return res.json(
+            {
+                success: true,
+                message: "task retrieved",
+                data: task
+            }
+        )
+    } catch (error) {
+        return res.status(500).json(
+            {
+                success: false,
+                message: "something went wrong",
+                error: error.message
+            }
+        )
     }
 }
 
